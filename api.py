@@ -1,5 +1,4 @@
 import flask
-import json
 from flask import jsonify, request
 from flask_restful import Api
 
@@ -16,7 +15,6 @@ api = Api(blueprint)
 # создание товара
 @blueprint.route('/api/product', methods=['POST'])
 def create_product():
-    print('создание')
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in
@@ -42,35 +40,19 @@ def create_product():
 # редактирование товара по его идентификатору или SKU
 @blueprint.route('/api/product/<int:n>', methods=['PUT'])
 def edit_product(n):
-    print('редакт')
     db_sess = db_session.create_session()
     if not request.json:
         return jsonify({'error': 'Empty requests'})
-    # if request.method == 'GET':
-    #
-    #     if len(str(n)) != 8:
-    #         product = db_sess.query(Products).filter(Products.id == n).first()
-    #     else:
-    #         product = db_sess.query(Products).filter(Products.scu == n).first()
-    #
-    #     if not product:
-    #         return jsonify({'products': {}, 'error': 'Not found'})
-    #     return jsonify({'products': product.to_dict(only=('scu', 'name', 'type', 'cost'))})
 
-    # elif request.method == 'PUT':
-    # print('put')
     if len(str(n)) != 8:
         product = db_sess.query(Products).filter(Products.id == n).first()
-        print('id', product)
+        if not product:
+            return jsonify({'products': {}, 'error': 'Invalid id'})
 
     else:
         product = db_sess.query(Products).filter(Products.scu == n).first()
-        print('scu', product)
-
-    # if id != request.json['id']:
-    #     return jsonify({'products': {}, 'error': 'Bad request'})
-    # if not product:
-    #     return jsonify({'products': {}, 'error': 'Invalid id'})
+        if not product:
+            return jsonify({'products': {}, 'error': 'Invalid scu'})
 
     id_new, scu_new, name_new, type_new, cost_new = product.id, product.scu, product.name, product.type, product.cost
     if request.json is not None:
@@ -95,7 +77,7 @@ def edit_product(n):
     )
     db_sess.add(product_new)
     db_sess.commit()
-    return jsonify({'result': 'OK'})
+    return jsonify({'success': 'OK'})
 
 
 # удаление товара по его идентификатору или SKU
@@ -117,13 +99,11 @@ def delete_product(n):
 # получение информации о товаре по его идентификатору или SKU
 @blueprint.route('/api/product/<int:n>', methods=['GET'])
 def get_one_product(n):
-    print('инфа')
     db_sess = db_session.create_session()
     if len(str(n)) != 8:
         product = db_sess.query(Products).filter(Products.id == n).all()
     else:
         product = db_sess.query(Products).filter(Products.scu == n).all()
-    print(type(product))
 
     final_dict = {}
     for p in product:
@@ -145,8 +125,17 @@ def div_list(lst, n):
 # получение каталога товаров
 @blueprint.route('/api/products', methods=['GET'])
 def get_list_products():
-    print('list')
     if request.json is not None:
+        if 'scu' in request.json:
+            cond_scu = Products.scu == request.json['scu']
+        else:
+            cond_scu = True
+
+        if 'name' in request.json:
+            cond_name = Products.name == request.json['name']
+        else:
+            cond_name = True
+
         if 'type' in request.json:
             cond_type = Products.type == request.json['type']
         else:
@@ -158,7 +147,7 @@ def get_list_products():
             cond_cost = True
 
         db_sess = db_session.create_session()
-        products = db_sess.query(Products).filter(cond_type, cond_cost).all()
+        products = db_sess.query(Products).filter(cond_scu, cond_name, cond_type, cond_cost).all()
     else:
         db_sess = db_session.create_session()
         products = db_sess.query(Products).all()
@@ -170,5 +159,5 @@ def get_list_products():
     }
 
     final_list = list(div_list(full_list_prod['products'], 10))
-    print(final_list)
+
     return jsonify({'data': final_list})
