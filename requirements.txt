@@ -2,3 +2,8 @@ requests
 sqlalchemy
 flask
 flask_restful
+SerializerMixin
+sqlalchemy
+urllib
+http
+socketserver
