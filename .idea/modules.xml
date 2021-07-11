@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/xsolla_sirozhova.iml" filepath="$PROJECT_DIR$/.idea/xsolla_sirozhova.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/product_api_sirozhova.iml" filepath="$PROJECT_DIR$/.idea/product_api_sirozhova.iml" />
     </modules>
   </component>
 </project>

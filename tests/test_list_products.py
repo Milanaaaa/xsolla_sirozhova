@@ -1,6 +1,6 @@
 import requests
+from data.api_root import api_root
 
-api_root = 'http://localhost:5000/api/'
 
 print(requests.get(api_root + 'products').json())
 

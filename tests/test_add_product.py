@@ -1,6 +1,5 @@
 import requests
-
-api_root = 'http://localhost:5000/api/'
+from data.api_root import api_root
 
 # корректные данные
 print(requests.post(api_root + 'product',
