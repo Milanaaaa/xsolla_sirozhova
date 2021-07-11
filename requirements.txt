@@ -2,7 +2,7 @@ requests
 sqlalchemy
 flask
 flask_restful
-sqlalchemy_serializer
+SQLAlchemy-serializer
 sqlalchemy
 urllib
 http
