@@ -4,6 +4,3 @@ flask
 flask_restful
 SQLAlchemy-serializer
 sqlalchemy
-urllib
-http
-socketserver
