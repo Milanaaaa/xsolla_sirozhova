@@ -10,7 +10,7 @@ app = Flask(__name__)
 def main():
     db_session.global_init("db/db_products.db")
     app.register_blueprint(api.blueprint)
-    port = int(os.environ.get('PORT', process.env.PORT))
+    port = int(os.environ.get('PORT', port_num))
     app.run(port=port)
 
 
