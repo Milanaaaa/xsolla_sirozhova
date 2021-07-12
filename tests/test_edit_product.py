@@ -2,8 +2,8 @@ import requests
 from data.api_root import api_root
 
 # по id
-print(requests.put(api_root + 'product/3',
-                   json={'scu': 11111111, 'name': 'ложка', 'cost': '150'}).json())
+print(requests.put(api_root + 'product/11',
+                   json={'scu': 11112131, 'name': 'нож', 'cost': '150'}).json())
 
 # по scu
 print(requests.put(api_root + 'product/11111112',

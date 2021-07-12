@@ -15,6 +15,7 @@ api = Api(blueprint)
 # создание товара
 @blueprint.route('/api/product', methods=['POST'])
 def create_product():
+    print('add')
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in
@@ -23,7 +24,13 @@ def create_product():
 
     db_sess = db_session.create_session()
     products = db_sess.query(Products).all()
-    new_id = max([p.id for p in products if p is not None]) + 1
+    products_scu = [p.scu for p in products]
+    if request.json['scu'] in products_scu:
+        return jsonify({'error': 'Duplicate scu'})
+
+    index_list = [p.id for p in products if p is not None]
+    maximum = max(index_list)
+    new_id = min([i for i in range(1, maximum + 1) if i not in index_list])
 
     product = Products(
         id=new_id,
@@ -47,14 +54,18 @@ def edit_product(n):
     if len(str(n)) != 8:
         product = db_sess.query(Products).filter(Products.id == n).first()
         if not product:
-            return jsonify({'products': {}, 'error': 'Invalid id'})
+            return jsonify({'error': 'Invalid id'})
 
     else:
         product = db_sess.query(Products).filter(Products.scu == n).first()
         if not product:
-            return jsonify({'products': {}, 'error': 'Invalid scu'})
+            return jsonify({'error': 'Invalid scu'})
 
     id_new, scu_new, name_new, type_new, cost_new = product.id, product.scu, product.name, product.type, product.cost
+
+    products = db_sess.query(Products).all()
+    products_scu = [p.scu for p in products]
+
     if request.json is not None:
         if 'scu' in request.json:
             scu_new = request.json['scu']
@@ -64,6 +75,9 @@ def edit_product(n):
             type_new = request.json['type']
         if 'cost' in request.json:
             cost_new = request.json['cost']
+
+    if scu_new in products_scu:
+        return jsonify({'error': 'Duplicate scu'})
 
     db_sess.delete(product)
     db_sess.commit()
@@ -125,6 +139,7 @@ def div_list(lst, n):
 # получение каталога товаров
 @blueprint.route('/api/products', methods=['GET'])
 def get_list_products():
+    print('lst')
     if request.json is not None:
         if 'scu' in request.json:
             cond_scu = Products.scu == request.json['scu']
@@ -147,10 +162,10 @@ def get_list_products():
             cond_cost = True
 
         db_sess = db_session.create_session()
-        products = db_sess.query(Products).filter(cond_scu, cond_name, cond_type, cond_cost).all()
+        products = db_sess.query(Products).filter(cond_scu, cond_name, cond_type, cond_cost).order_by(Products.id).all()
     else:
         db_sess = db_session.create_session()
-        products = db_sess.query(Products).all()
+        products = db_sess.query(Products).order_by(Products.id).all()
 
     full_list_prod = {
         'products':
