@@ -4,7 +4,7 @@ ADD server.py /server/
 
 WORKDIR /server/
 
-
+EXPOSE 5050
 
 #RUN mkdir -p /usr/src/app/
 #

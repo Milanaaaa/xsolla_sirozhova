@@ -15,7 +15,6 @@ api = Api(blueprint)
 # создание товара
 @blueprint.route('/api/product', methods=['POST'])
 def create_product():
-    print('add')
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in

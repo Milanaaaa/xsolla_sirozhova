@@ -1,0 +1,121 @@
+openapi: "3.0.0"
+info:
+  title: Product API
+  version: "1.0.0"
+  description: product management system for an e-commerce platform
+servers:
+  - url: http://127.0.0.1:5050/api
+paths:
+  /products:
+    get:
+      summary: List of products
+      description: returns list of products, filtered by one attribute, ordered by id
+      operationId: listProducts
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: Sample
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: Placeholder description
+
+        404:
+          description: Not found response
+          content:
+            text/plain:
+              schema:
+                title: Weather not found
+                type: string
+                example: Not found
+  /product:
+    post:
+      summary: Create a product
+      description: create a product using data from json
+      operationId: createProducts
+      responses:
+        200:
+          description: Successful response
+
+        404:
+          description: Not found response
+  /product/{productId_SCU}:
+    get:
+      summary: Info for a specific product
+      description: returns information about product by id or scu
+      operationId: showProductById
+      parameters:
+        - name: productId_SCU
+          in: path
+          required: true
+          description: The id of the product to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+
+        404:
+          description: Not found response
+    delete:
+      summary: Delete a product
+      description: deletes a single product based on the ID or SCU
+      operationId: deleteProduct
+      parameters:
+        - name: productId_SCU
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Successful response
+
+        404:
+          description: Not found response
+    put:
+      summary: Edit a product
+      description: change some attributes of product
+      operationId: editProducts
+      parameters:
+        - name: productId_SCU
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Successful response
+
+        404:
+          description: Not found response
+
+components:
+  schemas:
+    Products:
+      type: object
+      required:
+        - id
+        - scu
+        - name
+        - type
+        - cost
+      properties:
+        id:
+          type: integer
+        scu:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        cost:
+          type: integer
