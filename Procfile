@@ -1,1 +1,1 @@
-web: python main.py 0.0.0.0
+api: python main.py 0.0.0.0
