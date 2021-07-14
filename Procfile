@@ -1,1 +1,2 @@
-worker: python main.py 127.0.0.1:5050
+heroku ps:scale web=0
+heroku ps:scale worker=1
