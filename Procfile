@@ -1,1 +1,1 @@
-web: python main.py 127.0.0.1:5050
+worker: python main.py 127.0.0.1:5050
